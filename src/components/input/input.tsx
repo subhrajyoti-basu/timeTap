@@ -1,15 +1,18 @@
-import { component$ } from "@builder.io/qwik";
+import { QwikDOMAttributes, component$ } from "@builder.io/qwik";
 
-export interface InputProps {
+interface InputProps {
+  value: string | undefined;
   placeholder?: string;
-  message?: string;
-  err?: boolean;
+  type?: string;
 }
 
-export const Input = component$<InputProps>(({ placeholder, err }) => {
+export const Input = component$<InputProps>((props) => {
   return (
     <div>
       <input
+        {...props}
+        value={props.value}
+        placeholder={props.placeholder}
         class={`
                 w-full
                 border
@@ -17,10 +20,7 @@ export const Input = component$<InputProps>(({ placeholder, err }) => {
                 px-2
                 py-1
                 focus:outline
-                ${err && "outline-rose-500 outline outline-1"}
-
       `}
-        placeholder={placeholder}
       />
     </div>
   );

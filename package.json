@@ -27,7 +27,7 @@
   "devDependencies": {
     "@builder.io/qwik": "^1.1.4",
     "@builder.io/qwik-city": "^1.1.4",
-    "@prisma/client": "4.14.0",
+    "@prisma/client": "^4.14.1",
     "@types/eslint": "8.37.0",
     "@types/node": "^20.1.4",
     "@typescript-eslint/eslint-plugin": "5.59.5",
@@ -43,5 +43,11 @@
     "undici": "5.22.1",
     "vite": "4.3.5",
     "vite-tsconfig-paths": "4.2.0"
+  },
+  "dependencies": {
+    "@modular-forms/qwik": "^0.16.0",
+    "@supabase/supabase-js": "^2.22.0",
+    "tailwind-merge": "^1.12.0",
+    "zod": "^3.21.4"
   }
 }
