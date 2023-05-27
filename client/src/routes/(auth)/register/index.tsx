@@ -1,21 +1,22 @@
 import { $, component$, useSignal, useStore } from "@builder.io/qwik";
-import { Link, routeLoader$, z } from "@builder.io/qwik-city";
+import { Link, routeLoader$, useLocation } from "@builder.io/qwik-city";
+import { Button } from "~/components/button/button";
+import { Container } from "~/components/container/container";
+import { Logo } from "~/components/icons/logo";
+import { Input } from "~/components/input/input";
+import { z } from "zod";
+import { supabase } from "~/utils/supabase";
+import { twMerge } from "tailwind-merge";
 import {
   InitialValues,
   SubmitHandler,
   useForm,
   zodForm$,
 } from "@modular-forms/qwik";
-import { twMerge } from "tailwind-merge";
-import { Button } from "~/components/button/button";
-import { Container } from "~/components/container/container";
 import { LuTwitter } from "~/components/icons/LuTwitter";
-import { Logo } from "~/components/icons/logo";
-import { Input } from "~/components/input/input";
-import { supabase } from "~/utils/supabase";
 
 // create email validation using zod
-const loginSchema = z.object({
+const registerSchema = z.object({
   email: z
     .string()
     .min(1, "Please enter your email.")
@@ -23,11 +24,11 @@ const loginSchema = z.object({
   password: z.string().min(6, "Password needs to be more than 6 characters"),
 });
 
-// created type using login schema
-type LoginForm = z.infer<typeof loginSchema>;
+// created type using register schema
+type RegisterForm = z.infer<typeof registerSchema>;
 
 // set initial values
-export const useFormLoader = routeLoader$<InitialValues<LoginForm>>(() => ({
+export const useFormLoader = routeLoader$<InitialValues<RegisterForm>>(() => ({
   email: "",
   password: "",
 }));
@@ -38,19 +39,25 @@ export default component$(() => {
   const loading = useSignal(false);
   const message = useStore({ message: "", status: "error" });
 
-  const [loginForm, { Form, Field }] = useForm<LoginForm>({
+  // location initialize
+  const loc = useLocation();
+
+  const [registerForm, { Form, Field }] = useForm<RegisterForm>({
     loader: useFormLoader(),
-    validate: zodForm$(loginSchema),
+    validate: zodForm$(registerSchema),
   });
 
-  const handleSubmit: SubmitHandler<LoginForm> = $(async (values, event) => {
+  const handleSubmit: SubmitHandler<RegisterForm> = $(async (values, event) => {
     // change loading to true
     loading.value = true;
 
     // create user in supabase
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signUp({
       email: values.email,
       password: values.password,
+      options: {
+        emailRedirectTo: loc.url.origin + "/login",
+      },
     });
 
     // check for error
@@ -62,12 +69,13 @@ export default component$(() => {
     }
     // if not error
     if (data?.user?.id) {
-      console.log(data);
-      // send user to feed
+      message.message = "Success please check your email/spam folder";
+      message.status = "success";
     }
     // end loader
     loading.value = false;
   });
+
   return (
     <Container>
       <div
@@ -87,9 +95,9 @@ export default component$(() => {
         >
           <h3 class="text-2xl gap-3 flex">
             <Logo />
-            Sign In
+            Sign Up
           </h3>
-          <p class="text-neutral-500">Welcome Back. Let's nail your goals.</p>
+          <p class="text-neutral-500">Create an Account and nail your goals.</p>
           <div class="mt-4">
             <Form onSubmit$={handleSubmit}>
               <div class="gap-3">
@@ -135,7 +143,7 @@ export default component$(() => {
                     type="submit"
                     class="px-7 w-full"
                   >
-                    Login
+                    Signup
                   </Button>
                 </div>
               </div>
@@ -149,20 +157,17 @@ export default component$(() => {
                     hover:bg-sky-500
                     "
               >
-                Login with Twitter
+                Signup with Twitter
                 <LuTwitter class="w-5 h-5" />
               </Button>
             </div>
             <div class="flex flex-col items-center mt-3">
-              <span class="text-sm text-neutral-500">
-                <Link href="/forgot-password">Forgotten your password?</Link>
-              </span>
               <div class="flex gap-2 items-center">
                 <span class="text-sm text-neutral-500">
-                  Don't have an account?
+                  Already have an account?
                 </span>
                 <span class="font-medium">
-                  <Link href="/register">Register</Link>
+                  <Link href="/login">Login</Link>
                 </span>
               </div>
             </div>
