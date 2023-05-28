@@ -1,21 +1,50 @@
 import { component$, Slot } from "@builder.io/qwik";
-import { Container } from "~/components/container/container";
-import { NavBar } from "~/components/navbar/navBar";
+import { GoalColumn } from "~/components/goalbar/goalColumn";
 import { UserNavBar } from "~/components/navbar/userNavBar";
+import { CheckAuth } from "~/components/protected/checkAuth";
 
 export default component$(() => {
   return (
     <>
-      <Container>
-        <div class="flex">
-          <div class="max-w-[321px] w-full h-screen ">
-            <UserNavBar />
+      <CheckAuth>
+        <div class="md:px-3 min-h-screen bg-neutral-900">
+          <div class="flex max-w-[1280px] mx-auto">
+            <div class="w-[275px] h-screen sticky top-0 lg:block hidden">
+              <UserNavBar />
+            </div>
+            <div class="flex w-full">
+              <div
+                class="  
+                  max-w-[700px]
+                  w-full
+                  "
+              >
+                <Slot />
+              </div>
+              <div class="w-full  md:block hidden">
+                <div
+                  class="
+                  max-w-[400px] 
+                  w-full
+                 
+                  mx-auto
+                 
+                  h-screen
+                  sticky 
+                  top-0 
+                  
+                  
+                  "
+                >
+                  <div class="pt-3 ml-5">
+                    <GoalColumn />
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class=" w-full flex-1 h-screen bg-white border-x"></div>
-          <div class="max-w-[430px] w-full h-screen "></div>
         </div>
-        <Slot />
-      </Container>
+      </CheckAuth>
     </>
   );
 });

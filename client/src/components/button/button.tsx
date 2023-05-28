@@ -1,4 +1,4 @@
-import { Slot, component$ } from "@builder.io/qwik";
+import { QRL, Slot, component$ } from "@builder.io/qwik";
 import { twMerge } from "tailwind-merge";
 import { Spinner } from "../icons/spinner";
 
@@ -7,11 +7,13 @@ export interface Iprops {
   size?: string;
   type?: string;
   loading?: boolean;
+  onClick?: QRL<() => void>;
 }
 
 export const Button = component$<Iprops>((props) => {
   return (
     <button
+      onClick$={props.onClick}
       class={twMerge(
         `
         px-3 

@@ -1,11 +1,12 @@
 import { $, component$, useSignal, useStore } from "@builder.io/qwik";
-import { Link, routeLoader$, useNavigate, z } from "@builder.io/qwik-city";
 import {
-  InitialValues,
-  SubmitHandler,
-  useForm,
-  zodForm$,
-} from "@modular-forms/qwik";
+  Link,
+  routeLoader$,
+  useLocation,
+  useNavigate,
+  z,
+} from "@builder.io/qwik-city";
+import { InitialValues, useForm, zodForm$ } from "@modular-forms/qwik";
 import { twMerge } from "tailwind-merge";
 import { Button } from "~/components/button/button";
 import { Container } from "~/components/container/container";
@@ -37,24 +38,46 @@ export const useFormLoader = routeLoader$<InitialValues<LoginForm>>(() => ({
 export default component$(() => {
   // signals
   const loading = useSignal(false);
+  const loadingTwitter = useSignal(false);
   const message = useStore({ message: "", status: "error" });
 
   // initialize useNavigation
   const nav = useNavigate();
+  const loc = useLocation();
 
-  const [loginForm, { Form, Field }] = useForm<LoginForm>({
+  const [, { Form, Field }] = useForm<LoginForm>({
     loader: useFormLoader(),
     validate: zodForm$(loginSchema),
   });
 
-  const handleSubmit: SubmitHandler<LoginForm> = $(async (values, event) => {
+  // handle twitter login
+  const handleTwitterLogin = $(async () => {
+    // change loading to true
+    loadingTwitter.value = true;
+    await supabase.auth.signInWithOAuth({
+      provider: "twitter",
+      options: {
+        redirectTo: loc.url.origin + "/u/feed",
+      },
+    });
+
+    // end loader
+    loadingTwitter.value = false;
+  });
+
+  interface FormEvent {
+    email: string;
+    password: string;
+  }
+
+  const handleSubmit = $(async (value: FormEvent) => {
     // change loading to true
     loading.value = true;
 
     // create user in supabase
     const { data, error } = await supabase.auth.signInWithPassword({
-      email: values.email,
-      password: values.password,
+      email: value.email,
+      password: value.password,
     });
 
     // check for error
@@ -73,6 +96,7 @@ export default component$(() => {
     // end loader
     loading.value = false;
   });
+
   return (
     <CheckAuth>
       <Container>
@@ -148,6 +172,8 @@ export default component$(() => {
               </Form>
               <div class="mt-2">
                 <Button
+                  loading={loadingTwitter.value}
+                  onClick={handleTwitterLogin}
                   class="
                     bg-sky-400
                     w-full 

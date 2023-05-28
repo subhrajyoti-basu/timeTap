@@ -1,9 +1,4 @@
-import {
-  Slot,
-  component$,
-  useContext,
-  useVisibleTask$,
-} from "@builder.io/qwik";
+import { Slot, component$, useVisibleTask$ } from "@builder.io/qwik";
 import { useLocation, useNavigate } from "@builder.io/qwik-city";
 import { supabase } from "~/utils/supabase";
 
@@ -25,6 +20,7 @@ export const CheckAuth = component$(() => {
     ) {
       nav("/u/feed");
     }
+    // console.log(data);
   });
 
   return (

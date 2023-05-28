@@ -7,12 +7,7 @@ import { Input } from "~/components/input/input";
 import { z } from "zod";
 import { supabase } from "~/utils/supabase";
 import { twMerge } from "tailwind-merge";
-import {
-  InitialValues,
-  SubmitHandler,
-  useForm,
-  zodForm$,
-} from "@modular-forms/qwik";
+import { InitialValues, useForm, zodForm$ } from "@modular-forms/qwik";
 import { LuTwitter } from "~/components/icons/LuTwitter";
 
 // create email validation using zod
@@ -42,12 +37,17 @@ export default component$(() => {
   // location initialize
   const loc = useLocation();
 
-  const [registerForm, { Form, Field }] = useForm<RegisterForm>({
+  const [, { Form, Field }] = useForm<RegisterForm>({
     loader: useFormLoader(),
     validate: zodForm$(registerSchema),
   });
 
-  const handleSubmit: SubmitHandler<RegisterForm> = $(async (values, event) => {
+  interface FormEvent {
+    email: string;
+    password: string;
+  }
+
+  const handleSubmit = $(async (values: FormEvent) => {
     // change loading to true
     loading.value = true;
 
