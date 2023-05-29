@@ -89,7 +89,6 @@ export default component$(() => {
     }
     // if not error
     if (data?.user?.id) {
-      console.log(data);
       // send user to feed
       nav("/u/feed");
     }

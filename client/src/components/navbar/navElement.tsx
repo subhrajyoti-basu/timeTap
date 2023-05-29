@@ -13,6 +13,7 @@ export const NavElement = component$<Iprops>((props) => {
         class="
             text-lg 
             font-semibold 
+            text-white
             "
       >
         {props.name}

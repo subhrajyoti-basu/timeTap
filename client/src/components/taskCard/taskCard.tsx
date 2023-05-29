@@ -7,9 +7,9 @@ export const TaskCard = component$(() => {
       <div class="px-4 bg-white rounded-3xl py-2 flex justify-between items-center">
         <div class="flex gap-3 items-center">
           <div>
-            <div class="bg-neutral-900 px-2 pt-3 pb-4 rounded-full text-white flex items-center flex-col">
-              <span class="text-lg leading-3">22</span>
-              <span class="text-xs">Mar</span>
+            <div class="bg-neutral-900 px-2 pt-2 pb-3 rounded-full text-white flex items-center flex-col">
+              <span class="text-lg font-medium leading-4">22</span>
+              <span class="text-xs tracking-normal">Mar</span>
             </div>
           </div>
           <div>
