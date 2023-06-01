@@ -15,7 +15,7 @@ export const ModalContext = createContextId<Signal<boolean>>("modal-context");
 export const ModalTitleContext = createContextId<Signal<string>>("modal-title");
 export const ModalBodyContext = createContextId<Signal<JSXNode>>("modal-body");
 
-export const ModalProvider = component$((props) => {
+export const ModalProvider = component$(() => {
   // signals
   const isOpen = useSignal<boolean>(true);
   const modalTitle = useSignal<string | undefined>();
@@ -26,6 +26,7 @@ export const ModalProvider = component$((props) => {
   useContextProvider(ModalTitleContext, modalTitle);
   useContextProvider(ModalBodyContext, modalBody);
 
+  // code run after dom mount and when the modal is open
   useVisibleTask$(({ track }) => {
     track(() => isOpen.value);
     // if isOpen
@@ -46,7 +47,8 @@ export const ModalProvider = component$((props) => {
       {isOpen.value && (
         <div
           class="
-                bg-neutral-900/80 
+                bg-neutral-800/80 
+                lg:backdrop-blur-sm
                 fixed 
                 h-screen 
                 w-screen 

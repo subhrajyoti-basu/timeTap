@@ -34,10 +34,8 @@ export const Modal = component$<Iprops>((props) => {
     isOpen.value = !isOpen.value;
   });
   return (
-    <div class="">
-      <div onClick$={toggleisOpen}>
-        <Slot name="trigger" />
-      </div>
+    <div onClick$={toggleisOpen}>
+      <Slot name="trigger" />
     </div>
   );
 });
